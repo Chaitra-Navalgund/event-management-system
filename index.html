@@ -1,0 +1,3635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chetan Business School - Event Tracker</title>
+    
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container h1 {
+            font-size: 3rem;
+            background: white;
+            color: #1a237e;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .institute-info h2 {
+            font-size: 0.9rem;
+            font-weight: normal;
+            color: #bbdefb;
+        }
+
+        .institute-info h3 {
+            font-size: 1.5rem;
+            margin: 0.2rem 0;
+        }
+
+        .institute-info p {
+            font-size: 0.9rem;
+            color: #bbdefb;
+        }
+
+        /* Button Styles */
+        .btn-login, .btn-primary, .btn-secondary, .btn-sm {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-login {
+            background: #00bcd4;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #0097a7;
+        }
+
+        .btn-primary {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #388e3c;
+        }
+
+        .btn-secondary {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1976d2;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        .btn-view {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #138496;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 35, 126, 0.9), rgba(26, 35, 126, 0.8)), 
+                        url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #1a237e;
+            font-size: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #2196f3;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: #1a237e;
+        }
+
+        /* Events Preview */
+        .events-preview {
+            padding: 4rem 2rem;
+            background: #f0f2f5;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .events-preview h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1a237e;
+        }
+
+        .events-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .event-header {
+            background: #2196f3;
+            color: white;
+            padding: 1rem;
+        }
+
+        .event-header h3 {
+            margin: 0;
+        }
+
+        .event-body {
+            padding: 1.5rem;
+        }
+
+        .event-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .event-meta i {
+            margin-right: 0.5rem;
+            color: #2196f3;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        .modal-note {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a237e;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        /* Dashboard Specific Styles */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 200px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 0;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #00bcd4;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar li.active a {
+            background: rgba(0, 188, 212, 0.2);
+            border-left-color: #00bcd4;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f5f7fa;
+        }
+
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-msg {
+            color: white;
+            margin-right: 1rem;
+            font-weight: 500;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: #2196f3;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+            color: #1a237e;
+        }
+
+        .stat-card p {
+            color: #666;
+            margin: 0;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .quick-actions h3 {
+            margin-bottom: 1.5rem;
+            color: #1a237e;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            color: #1a237e;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons-small {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Status Badges */
+        .status-badge, .attendance-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active, .status-present {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-upcoming {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed, .status-absent {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .status-late {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Recent Section */
+        .recent-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .recent-section h3 {
+            color: #1a237e;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        /* Attendance Specific Styles */
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .attendance-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .attendance-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .summary-item {
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .summary-present {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .summary-absent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .summary-late {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .attendance-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .attendance-item:last-child {
+            border-bottom: none;
+        }
+
+        /* QR Code Styles */
+        .qr-code-container {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            margin: 1rem 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .qr-code {
+            margin: 1rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .qr-instructions {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            color: #1565c0;
+        }
+
+        .qr-instructions i {
+            margin-right: 0.5rem;
+        }
+
+        /* Bulk Actions */
+        .bulk-actions {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        /* Attendance Filters */
+        .attendance-filters {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Export Buttons */
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .export-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: #545b62;
+        }
+
+        .export-btn.pdf {
+            background: #dc3545;
+        }
+
+        .export-btn.pdf:hover {
+            background: #c82333;
+        }
+
+        .export-btn.excel {
+            background: #28a745;
+        }
+
+        .export-btn.excel:hover {
+            background: #218838;
+        }
+
+        /* Attendance Timeline */
+        .attendance-timeline {
+            margin: 2rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timeline-time {
+            background: #2196f3;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-right: 1rem;
+            font-weight: 600;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-content h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+
+        .timeline-content p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 300px;
+            max-width: 400px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid #2196f3;
+        }
+
+        .toast-success { border-left-color: #4caf50; }
+        .toast-warning { border-left-color: #ff9800; }
+        .toast-error { border-left-color: #f44336; }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Animation for Status Changes */
+        @keyframes statusChange {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .status-updated {
+            animation: statusChange 0.5s ease;
+        }
+
+        /* Loading Overlay */
+        .attendance-loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .attendance-loading.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #2196f3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 0;
+            }
+            
+            .sidebar ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .sidebar li {
+                flex-shrink: 0;
+            }
+            
+            .sidebar a {
+                padding: 1rem;
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .sidebar li.active a {
+                border-left: none;
+                border-bottom-color: #00bcd4;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .events-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .attendance-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .attendance-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .bulk-actions {
+                flex-direction: column;
+            }
+            
+            .attendance-filters {
+                flex-direction: column;
+            }
+            
+            .export-buttons {
+                flex-direction: column;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .timeline-time {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .sidebar, .action-buttons, .attendance-controls, .export-buttons {
+                display: none !important;
+            }
+            
+            .attendance-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .attendance-item {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Index Page -->
+    <div id="mainPage">
+        <!-- Header Section -->
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <h1>CBS</h1>
+                    <div class="institute-info">
+                        <h2>DYAVAPPANAVAR-KORAVI-SIONAL EDUCATION TRUST'S</h2>
+                        <h3>CHETAN BUSINESS SCHOOL</h3>
+                        <p>Institute of Management, IT & Research Centre</p>
+                    </div>
+                </div>
+                <div class="auth-buttons">
+                    <button id="loginBtn" class="btn-login">Organizer Login</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>Event Registration & Attendance Tracker</h1>
+                    <p>Digital solution for managing academic and organizational events</p>
+                    <div class="hero-buttons">
+                        <button id="viewEventsBtn" class="btn-primary">View Events</button>
+                        <button id="registerEventBtn" class="btn-secondary">Register for Event</button>
+                        <button id="checkAttendanceBtn" class="btn-primary">
+                            <i class="fas fa-clipboard-check"></i> Check Attendance
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features">
+                <h2>Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3>Event Management</h3>
+                        <p>Create and manage events with dates, descriptions, and registration limits</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-user-plus"></i>
+                        <h3>Online Registration</h3>
+                        <p>Allow participants to register for events with basic information</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h3>Attendance Tracking</h3>
+                        <p>Digital attendance marking with real-time updates</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Reports & Analytics</h3>
+                        <p>Generate reports on registrations and attendance</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Preview Section -->
+            <section class="events-preview">
+                <h2>Upcoming Events</h2>
+                <div id="eventsContainer" class="events-container">
+                    <!-- Events will be loaded here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Modals -->
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Organizer Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-primary">Login</button>
+                    </div>
+                    <p class="modal-note">Default: admin@cbs.com / admin123</p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Event Registration Modal -->
+        <div id="registrationModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Register for Event</h2>
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="eventSelect">Select Event:</label>
+                        <select id="eventSelect" required>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="participantName">Full Name:</label>
+                        <input type="text" id="participantName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="participantEmail">Email:</label>
+                        <input type="email" id="participantEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="participantPhone">Phone:</label>
+                        <input type="tel" id="participantPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="participantOrg">Organization:</label>
+                        <input type="text" id="participantOrg">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-primary">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Attendance Check Modal -->
+        <div id="attendanceModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Check Attendance Status</h2>
+                <form id="attendanceCheckForm">
+                    <div class="form-group">
+                        <label for="checkEmail">Enter Your Email:</label>
+                        <input type="email" id="checkEmail" required placeholder="Enter registered email">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkEvent">Select Event:</label>
+                        <select id="checkEvent" required>
+                            <!-- Events will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-primary">Check Attendance</button>
+                    </div>
+                </form>
+                <div id="attendanceResult" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h3>Attendance Status</h3>
+                    <div id="attendanceDetails"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Chetan Business School. All rights reserved.</p>
+            <p>Institute of Management, IT & Research Centre</p>
+        </footer>
+    </div>
+
+    <!-- Dashboard Page (Initially Hidden) -->
+    <div id="dashboardPage" style="display: none;">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <h1>CBS</h1>
+                    <div class="institute-info">
+                        <h2>DYAVAPPANAVAR-KORAVI-SIONAL EDUCATION TRUST'S</h2>
+                        <h3>CHETAN BUSINESS SCHOOL</h3>
+                        <p>Event Management Dashboard</p>
+                    </div>
+                </div>
+                <div class="auth-buttons">
+                    <span class="welcome-msg" id="welcomeMsg"></span>
+                    <button id="logoutBtn" class="btn-login">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <ul>
+                    <li class="active"><a href="#" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
+                    <li><a href="#" data-section="events"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                    <li><a href="#" data-section="participants"><i class="fas fa-users"></i> Participants</a></li>
+                    <li><a href="#" data-section="attendance"><i class="fas fa-clipboard-check"></i> Attendance</a></li>
+                    <li><a href="#" data-section="reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="#" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="dashboard-content">
+                <!-- Overview Section -->
+                <section id="overview" class="dashboard-section active">
+                    <h2>Dashboard Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-calendar"></i>
+                            <h3 id="totalEvents">0</h3>
+                            <p>Total Events</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-user-friends"></i>
+                            <h3 id="totalParticipants">0</h3>
+                            <p>Total Participants</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3 id="totalRegistrations">0</h3>
+                            <p>Total Registrations</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle"></i>
+                            <h3 id="attendanceRate">0%</h3>
+                            <p>Attendance Rate</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <h3>Quick Actions</h3>
+                        <div class="action-buttons">
+                            <button id="createEventBtn" class="btn-primary">
+                                <i class="fas fa-plus"></i> Create New Event
+                            </button>
+                            <button id="markAttendanceBtn" class="btn-secondary">
+                                <i class="fas fa-clipboard-check"></i> Mark Attendance
+                            </button>
+                            <button id="generateReportBtn" class="btn-primary">
+                                <i class="fas fa-file-export"></i> Generate Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Events -->
+                    <div class="recent-section">
+                        <h3>Recent Events</h3>
+                        <div id="recentEvents" class="table-container">
+                            <!-- Recent events table will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Events Management Section -->
+                <section id="events" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Events Management</h2>
+                        <button id="addEventBtn" class="btn-primary">
+                            <i class="fas fa-plus"></i> Add Event
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table id="eventsTable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Venue</th>
+                                    <th>Participants</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Events will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Participants Section -->
+                <section id="participants" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Participants Management</h2>
+                        <button id="exportParticipantsBtn" class="btn-secondary">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table id="participantsTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Organization</th>
+                                    <th>Registrations</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Participants will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Attendance Section -->
+                <section id="attendance" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Attendance Tracking</h2>
+                        <div class="attendance-controls">
+                            <select id="eventSelectAttendance">
+                                <option value="">Select Event</option>
+                            </select>
+                            <button id="qrScannerBtn" class="btn-primary">
+                                <i class="fas fa-qrcode"></i> QR Scanner
+                            </button>
+                            <button id="markAllPresentBtn" class="btn-primary">Mark All Present</button>
+                            <button id="exportAttendanceBtn" class="btn-secondary">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Attendance Summary -->
+                    <div class="attendance-summary" id="attendanceSummary">
+                        <div class="summary-item summary-present">
+                            <h3 id="presentCount">0</h3>
+                            <p>Present</p>
+                        </div>
+                        <div class="summary-item summary-absent">
+                            <h3 id="absentCount">0</h3>
+                            <p>Absent</p>
+                        </div>
+                        <div class="summary-item summary-late">
+                            <h3 id="lateCount">0</h3>
+                            <p>Late</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Attendance Filters -->
+                    <div class="attendance-filters">
+                        <div class="filter-group">
+                            <label for="filterStatus">Status:</label>
+                            <select id="filterStatus">
+                                <option value="all">All</option>
+                                <option value="present">Present</option>
+                                <option value="absent">Absent</option>
+                                <option value="late">Late</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterSearch">Search:</label>
+                            <input type="text" id="filterSearch" placeholder="Search by name or email">
+                        </div>
+                        <button id="applyFilters" class="btn-primary">Apply Filters</button>
+                        <button id="clearFilters" class="btn-secondary">Clear</button>
+                    </div>
+                    
+                    <!-- Bulk Actions -->
+                    <div class="bulk-actions">
+                        <button id="bulkPresent" class="btn-sm btn-primary">
+                            <i class="fas fa-check"></i> Mark Selected as Present
+                        </button>
+                        <button id="bulkAbsent" class="btn-sm btn-secondary">
+                            <i class="fas fa-times"></i> Mark Selected as Absent
+                        </button>
+                        <button id="bulkLate" class="btn-sm btn-warning">
+                            <i class="fas fa-clock"></i> Mark Selected as Late
+                        </button>
+                    </div>
+                    
+                    <!-- Attendance List -->
+                    <div id="attendanceContainer" class="table-container">
+                        <!-- Attendance will be loaded here -->
+                    </div>
+                    
+                    <!-- Attendance Timeline -->
+                    <div class="attendance-timeline" id="attendanceTimeline">
+                        <h3>Recent Attendance Markings</h3>
+                        <!-- Timeline will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports" class="dashboard-section">
+                    <h2>Reports & Analytics</h2>
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>Event Summary</h3>
+                            <canvas id="eventChart"></canvas>
+                        </div>
+                        <div class="report-card">
+                            <h3>Attendance Trends</h3>
+                            <canvas id="attendanceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button id="generateSummaryBtn" class="btn-primary">
+                            <i class="fas fa-file-pdf"></i> Generate PDF Report
+                        </button>
+                        <button id="exportDataBtn" class="btn-secondary">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="dashboard-section">
+                    <h2>System Settings</h2>
+                    <div class="settings-grid">
+                        <div class="setting-card">
+                            <h3><i class="fas fa-user-cog"></i> Profile Settings</h3>
+                            <form id="profileForm">
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" id="profileName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="email" id="profileEmail" required>
+                                </div>
+                                <button type="submit" class="btn-primary">Update Profile</button>
+                            </form>
+                        </div>
+                        <div class="setting-card">
+                            <h3><i class="fas fa-key"></i> Change Password</h3>
+                            <form id="passwordForm">
+                                <div class="form-group">
+                                    <label>Current Password:</label>
+                                    <input type="password" id="currentPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>New Password:</label>
+                                    <input type="password" id="newPassword" required>
+                                </div>
+                                <button type="submit" class="btn-primary">Change Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Event Modal -->
+        <div id="eventModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modalTitle">Create New Event</h2>
+                <form id="eventForm">
+                    <input type="hidden" id="eventId">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title:</label>
+                        <input type="text" id="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">Description:</label>
+                        <textarea id="eventDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eventDate">Date:</label>
+                            <input type="date" id="eventDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventTime">Time:</label>
+                            <input type="time" id="eventTime" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventVenue">Venue:</label>
+                        <input type="text" id="eventVenue" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxParticipants">Maximum Participants:</label>
+                        <input type="number" id="maxParticipants" min="1" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Event</button>
+                        <button type="button" class="btn-secondary close">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- QR Code Scanner Modal -->
+        <div id="qrScannerModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Scan QR Code for Attendance</h2>
+                <div class="qr-scanner-container">
+                    <div id="qr-reader" style="width: 100%"></div>
+                    <div id="qr-reader-results"></div>
+                </div>
+                <div class="qr-instructions">
+                    <p><i class="fas fa-info-circle"></i> Point the camera at the participant's QR code to mark attendance</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="attendance-loading" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Code -->
+    <script>
+        const SERVER_DATA = {{ initial_data|tojson }};
+
+        // ====================
+        // DATA STORAGE CLASS
+        // ====================
+        class DataStorage {
+            static getUsers() {
+                return JSON.parse(localStorage.getItem('cbs_users')) || [
+                    {
+                        email: 'admin@cbs.com',
+                        password: 'admin123',
+                        name: 'CBS Admin',
+                        role: 'organizer'
+                    }
+                ];
+            }
+
+            static saveUsers(users) {
+                localStorage.setItem('cbs_users', JSON.stringify(users));
+            }
+
+            static getEvents() {
+                if (SERVER_DATA.events) {
+                    return SERVER_DATA.events;
+                }
+
+                return JSON.parse(localStorage.getItem('cbs_events')) || [
+                    {
+                        id: 1,
+                        title: 'Annual Business Symposium',
+                        description: 'Annual symposium focusing on emerging business trends',
+                        date: '2026-02-15',
+                        time: '09:00',
+                        venue: 'CBS Auditorium',
+                        max_participants: 200,
+                        current_participants: 45,
+                        organizer: 'CBS Admin'
+                    },
+                    {
+                        id: 2,
+                        title: 'IT Innovation Workshop',
+                        description: 'Hands-on workshop on latest IT innovations',
+                        date: '2026-02-20',
+                        time: '10:00',
+                        venue: 'Computer Lab',
+                        max_participants: 50,
+                        current_participants: 32,
+                        organizer: 'CBS Admin'
+                    },
+                    {
+                        id: 3,
+                        title: 'Leadership Conference',
+                        description: 'Developing leadership skills for modern organizations',
+                        date: '2026-03-10',
+                        time: '14:00',
+                        venue: 'Main Hall',
+                        max_participants: 150,
+                        current_participants: 89,
+                        organizer: 'CBS Admin'
+                    }
+                ];
+            }
+
+            static saveEvents(events) {
+                SERVER_DATA.events = events;
+                localStorage.setItem('cbs_events', JSON.stringify(events));
+            }
+
+            static getParticipants() {
+                return JSON.parse(localStorage.getItem('cbs_participants')) || [
+                    {
+                        id: 1,
+                        name: 'John Smith',
+                        email: 'john@example.com',
+                        phone: '9876543210',
+                        organization: 'ABC Corp',
+                        created_at: '2026-01-01T10:00:00Z'
+                    },
+                    {
+                        id: 2,
+                        name: 'Sarah Johnson',
+                        email: 'sarah@example.com',
+                        phone: '9876543211',
+                        organization: 'XYZ Ltd',
+                        created_at: '2026-01-02T11:00:00Z'
+                    }
+                ];
+            }
+
+            static saveParticipants(participants) {
+                localStorage.setItem('cbs_participants', JSON.stringify(participants));
+            }
+
+            static getRegistrations() {
+                return JSON.parse(localStorage.getItem('cbs_registrations')) || [
+                    {
+                        id: 1,
+                        event_id: 1,
+                        participant_id: 1,
+                        registration_date: '2026-01-01T10:30:00Z',
+                        status: 'registered',
+                        qrData: '{"type":"event_registration","participantEmail":"john@example.com","eventId":1}'
+                    },
+                    {
+                        id: 2,
+                        event_id: 1,
+                        participant_id: 2,
+                        registration_date: '2026-01-02T11:30:00Z',
+                        status: 'registered',
+                        qrData: '{"type":"event_registration","participantEmail":"sarah@example.com","eventId":1}'
+                    },
+                    {
+                        id: 3,
+                        event_id: 2,
+                        participant_id: 1,
+                        registration_date: '2026-01-01T12:00:00Z',
+                        status: 'registered'
+                    }
+                ];
+            }
+
+            static saveRegistrations(registrations) {
+                localStorage.setItem('cbs_registrations', JSON.stringify(registrations));
+            }
+
+            static getAttendance() {
+                return JSON.parse(localStorage.getItem('cbs_attendance')) || [
+                    {
+                        id: 1,
+                        registration_id: 1,
+                        attendance_date: '2026-02-15',
+                        status: 'present',
+                        check_in_time: '2026-02-15T09:15:00Z',
+                        marked_by: 'CBS Admin',
+                        marked_at: '2026-02-15T09:15:00Z'
+                    },
+                    {
+                        id: 2,
+                        registration_id: 2,
+                        attendance_date: '2026-02-15',
+                        status: 'late',
+                        check_in_time: '2026-02-15T09:45:00Z',
+                        marked_by: 'CBS Admin',
+                        marked_at: '2026-02-15T09:45:00Z'
+                    }
+                ];
+            }
+
+            static saveAttendance(attendance) {
+                localStorage.setItem('cbs_attendance', JSON.stringify(attendance));
+            }
+
+            static getCurrentUser() {
+                return JSON.parse(localStorage.getItem('cbs_currentUser'));
+            }
+
+            static setCurrentUser(user) {
+                localStorage.setItem('cbs_currentUser', JSON.stringify(user));
+            }
+
+            static clearCurrentUser() {
+                localStorage.removeItem('cbs_currentUser');
+            }
+        }
+
+        class ApiClient {
+            static async request(url, options = {}) {
+                const response = await fetch(url, {
+                    headers: { 'Content-Type': 'application/json' },
+                    ...options
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Request failed');
+                }
+
+                return data;
+            }
+
+            static getEvents() {
+                return this.request('/api/events');
+            }
+
+            static saveEvent(event) {
+                const isUpdate = Boolean(event.id);
+                return this.request(isUpdate ? `/api/events/${event.id}` : '/api/events', {
+                    method: isUpdate ? 'PUT' : 'POST',
+                    body: JSON.stringify(event)
+                });
+            }
+
+            static registerParticipant(registration) {
+                return this.request('/api/register', {
+                    method: 'POST',
+                    body: JSON.stringify(registration)
+                });
+            }
+        }
+
+        // ====================
+        // ATTENDANCE MANAGER
+        // ====================
+        class AttendanceManager {
+            static markAttendance(eventId, participantEmail, status = 'present') {
+                const events = DataStorage.getEvents();
+                const participants = DataStorage.getParticipants();
+                const registrations = DataStorage.getRegistrations();
+                let attendance = DataStorage.getAttendance();
+                
+                const participant = participants.find(p => p.email === participantEmail);
+                if (!participant) {
+                    return { success: false, message: 'Participant not found' };
+                }
+                
+                const registration = registrations.find(r => 
+                    r.event_id === eventId && r.participant_id === participant.id
+                );
+                
+                if (!registration) {
+                    return { success: false, message: 'Participant not registered for this event' };
+                }
+                
+                const event = events.find(e => e.id === eventId);
+                if (!event) {
+                    return { success: false, message: 'Event not found' };
+                }
+                
+                const existingAttendance = attendance.find(a => 
+                    a.registration_id === registration.id && a.attendance_date === event.date
+                );
+                
+                if (existingAttendance) {
+                    existingAttendance.status = status;
+                    existingAttendance.check_in_time = new Date().toISOString();
+                    existingAttendance.last_updated = new Date().toISOString();
+                    existingAttendance.marked_by = DataStorage.getCurrentUser()?.name || 'System';
+                } else {
+                    attendance.push({
+                        id: attendance.length > 0 ? Math.max(...attendance.map(a => a.id)) + 1 : 1,
+                        registration_id: registration.id,
+                        attendance_date: event.date,
+                        status: status,
+                        check_in_time: new Date().toISOString(),
+                        check_out_time: null,
+                        marked_by: DataStorage.getCurrentUser()?.name || 'System',
+                        marked_at: new Date().toISOString()
+                    });
+                }
+                
+                DataStorage.saveAttendance(attendance);
+                return { 
+                    success: true, 
+                    message: `Attendance marked as ${status} for ${participant.name}` 
+                };
+            }
+            
+            static getAttendanceForEvent(eventId) {
+                const events = DataStorage.getEvents();
+                const participants = DataStorage.getParticipants();
+                const registrations = DataStorage.getRegistrations();
+                const attendance = DataStorage.getAttendance();
+                
+                const event = events.find(e => e.id === eventId);
+                if (!event) return [];
+                
+                const eventRegistrations = registrations.filter(r => r.event_id === eventId);
+                
+                return eventRegistrations.map(registration => {
+                    const participant = participants.find(p => p.id === registration.participant_id);
+                    const attRecord = attendance.find(a => 
+                        a.registration_id === registration.id && a.attendance_date === event.date
+                    );
+                    
+                    return {
+                        registration_id: registration.id,
+                        participant_name: participant?.name || 'Unknown',
+                        participant_email: participant?.email || '',
+                        participant_phone: participant?.phone || '',
+                        registration_date: registration.registration_date,
+                        attendance_status: attRecord?.status || 'absent',
+                        check_in_time: attRecord?.check_in_time || null,
+                        marked_by: attRecord?.marked_by || null
+                    };
+                });
+            }
+            
+            static getParticipantAttendance(participantEmail) {
+                const participants = DataStorage.getParticipants();
+                const events = DataStorage.getEvents();
+                const registrations = DataStorage.getRegistrations();
+                const attendance = DataStorage.getAttendance();
+                
+                const participant = participants.find(p => p.email === participantEmail);
+                if (!participant) return [];
+                
+                const participantRegistrations = registrations.filter(r => r.participant_id === participant.id);
+                
+                return participantRegistrations.map(registration => {
+                    const event = events.find(e => e.id === registration.event_id);
+                    const attRecord = attendance.find(a => 
+                        a.registration_id === registration.id && a.attendance_date === event?.date
+                    );
+                    
+                    return {
+                        event_title: event?.title || 'Unknown Event',
+                        event_date: event?.date || '',
+                        event_venue: event?.venue || '',
+                        registration_status: registration.status,
+                        attendance_status: attRecord?.status || 'absent',
+                        check_in_time: attRecord?.check_in_time || null,
+                        marked_by: attRecord?.marked_by || null
+                    };
+                });
+            }
+            
+            static generateAttendanceReport(eventId) {
+                const attendance = this.getAttendanceForEvent(eventId);
+                const events = DataStorage.getEvents();
+                const event = events.find(e => e.id === eventId);
+                
+                if (!event) return null;
+                
+                const summary = {
+                    total_registered: attendance.length,
+                    present: attendance.filter(a => a.attendance_status === 'present').length,
+                    absent: attendance.filter(a => a.attendance_status === 'absent').length,
+                    late: attendance.filter(a => a.attendance_status === 'late').length
+                };
+                
+                return {
+                    event_title: event.title,
+                    event_date: event.date,
+                    event_venue: event.venue,
+                    summary: summary,
+                    details: attendance,
+                    generated_at: new Date().toISOString()
+                };
+            }
+            
+            static exportAttendanceToCSV(eventId) {
+                const report = this.generateAttendanceReport(eventId);
+                if (!report) return null;
+                
+                let csvContent = "data:text/csv;charset=utf-8,";
+                
+                csvContent += `Event: ${report.event_title}\n`;
+                csvContent += `Date: ${report.event_date}\n`;
+                csvContent += `Venue: ${report.event_venue}\n\n`;
+                
+                csvContent += "ATTENDANCE SUMMARY\n";
+                csvContent += `Total Registered,${report.summary.total_registered}\n`;
+                csvContent += `Present,${report.summary.present}\n`;
+                csvContent += `Absent,${report.summary.absent}\n`;
+                csvContent += `Late,${report.summary.late}\n\n`;
+                
+                csvContent += "ATTENDANCE DETAILS\n";
+                csvContent += "Participant Name,Email,Phone,Status,Check-in Time,Marked By\n";
+                
+                report.details.forEach(record => {
+                    csvContent += `"${record.participant_name}","${record.participant_email}","${record.participant_phone}","${record.attendance_status}","${record.check_in_time || ''}","${record.marked_by || ''}"\n`;
+                });
+                
+                return csvContent;
+            }
+        }
+
+        // ====================
+        // DASHBOARD MANAGER
+        // ====================
+        class DashboardManager {
+            constructor() {
+                this.currentUser = null;
+                this.data = {};
+                this.initialize();
+            }
+
+            initialize() {
+                this.checkAuth();
+                this.setupEventListeners();
+                this.loadDashboard();
+                this.updateWelcomeMessage();
+                this.loadStats();
+            }
+
+            checkAuth() {
+                this.currentUser = DataStorage.getCurrentUser();
+                if (!this.currentUser) {
+                    this.showMainPage();
+                } else {
+                    this.showDashboard();
+                }
+            }
+
+            setupEventListeners() {
+                // Logout
+                document.getElementById('logoutBtn')?.addEventListener('click', () => {
+                    DataStorage.clearCurrentUser();
+                    this.showMainPage();
+                });
+
+                // Navigation
+                document.querySelectorAll('.sidebar a').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const section = link.dataset.section;
+                        this.showSection(section);
+                    });
+                });
+
+                // Quick Actions
+                document.getElementById('createEventBtn')?.addEventListener('click', () => {
+                    this.showSection('events');
+                    this.openEventModal();
+                });
+
+                document.getElementById('markAttendanceBtn')?.addEventListener('click', () => {
+                    this.showSection('attendance');
+                });
+
+                document.getElementById('generateReportBtn')?.addEventListener('click', () => {
+                    this.showSection('reports');
+                    this.generateReport();
+                });
+
+                // Events Management
+                document.getElementById('addEventBtn')?.addEventListener('click', () => {
+                    this.openEventModal();
+                });
+
+                // Participants Management
+                document.getElementById('exportParticipantsBtn')?.addEventListener('click', () => {
+                    this.exportParticipants();
+                });
+
+                // Attendance
+                document.getElementById('eventSelectAttendance')?.addEventListener('change', (e) => {
+                    this.loadAttendanceForEvent(e.target.value);
+                });
+
+                document.getElementById('markAllPresentBtn')?.addEventListener('click', () => {
+                    this.markAllPresent();
+                });
+
+                document.getElementById('qrScannerBtn')?.addEventListener('click', () => {
+                    this.openQRScanner();
+                });
+
+                // Reports
+                document.getElementById('generateSummaryBtn')?.addEventListener('click', () => {
+                    this.generatePDFReport();
+                });
+
+                document.getElementById('exportDataBtn')?.addEventListener('click', () => {
+                    this.exportToExcel();
+                });
+
+                // Settings
+                document.getElementById('profileForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.updateProfile();
+                });
+
+                document.getElementById('passwordForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.changePassword();
+                });
+
+                // Modal Events
+                document.querySelectorAll('.close').forEach(closeBtn => {
+                    closeBtn.addEventListener('click', () => {
+                        document.querySelectorAll('.modal').forEach(modal => {
+                            modal.style.display = 'none';
+                        });
+                    });
+                });
+
+                // Close modal when clicking outside
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                    }
+                });
+
+                // Event Form
+                document.getElementById('eventForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveEvent();
+                });
+            }
+
+            loadDashboard() {
+                this.data = {
+                    events: DataStorage.getEvents(),
+                    participants: DataStorage.getParticipants(),
+                    registrations: DataStorage.getRegistrations(),
+                    attendance: DataStorage.getAttendance(),
+                    users: DataStorage.getUsers()
+                };
+                this.loadEvents();
+                this.loadParticipants();
+                this.loadRecentEvents();
+            }
+
+            updateWelcomeMessage() {
+                const welcomeMsg = document.getElementById('welcomeMsg');
+                if (this.currentUser && welcomeMsg) {
+                    welcomeMsg.textContent = `Welcome, ${this.currentUser.name}`;
+                }
+            }
+
+            showSection(sectionId) {
+                document.querySelectorAll('.sidebar li').forEach(li => {
+                    li.classList.remove('active');
+                });
+                const navItem = document.querySelector(`[data-section="${sectionId}"]`);
+                if (navItem) {
+                    navItem.parentElement.classList.add('active');
+                }
+
+                document.querySelectorAll('.dashboard-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                const sectionElement = document.getElementById(sectionId);
+                if (sectionElement) {
+                    sectionElement.classList.add('active');
+                }
+            }
+
+            loadStats() {
+                const data = this.data;
+                
+                document.getElementById('totalEvents').textContent = data.events.length;
+                document.getElementById('totalParticipants').textContent = data.participants.length;
+                document.getElementById('totalRegistrations').textContent = data.registrations.length;
+                
+                const totalAttendance = data.attendance.filter(a => a.status === 'present').length;
+                const attendanceRate = data.attendance.length > 0 ? 
+                    Math.round((totalAttendance / data.attendance.length) * 100) : 0;
+                document.getElementById('attendanceRate').textContent = `${attendanceRate}%`;
+            }
+
+            loadEvents() {
+                const eventsTable = document.getElementById('eventsTable')?.querySelector('tbody');
+                if (!eventsTable) return;
+
+                eventsTable.innerHTML = '';
+
+                this.data.events.forEach(event => {
+                    const row = document.createElement('tr');
+                    
+                    const eventDate = new Date(event.date);
+                    const today = new Date();
+                    let status = 'upcoming';
+                    let statusClass = 'status-upcoming';
+                    
+                    if (eventDate < today) {
+                        status = 'completed';
+                        statusClass = 'status-completed';
+                    } else if (event.current_participants >= event.max_participants) {
+                        status = 'full';
+                        statusClass = 'status-completed';
+                    }
+
+                    row.innerHTML = `
+                        <td>${event.title}</td>
+                        <td>${event.date}</td>
+                        <td>${event.venue}</td>
+                        <td>${event.current_participants}/${event.max_participants}</td>
+                        <td><span class="status-badge ${statusClass}">${status}</span></td>
+                        <td>
+                            <div class="action-buttons-small">
+                                <button class="btn-sm btn-view" onclick="dashboard.viewEvent(${event.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-sm btn-edit" onclick="dashboard.editEvent(${event.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-sm btn-delete" onclick="dashboard.deleteEvent(${event.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    eventsTable.appendChild(row);
+                });
+            }
+
+            loadParticipants() {
+                const participantsTable = document.getElementById('participantsTable')?.querySelector('tbody');
+                if (!participantsTable) return;
+
+                participantsTable.innerHTML = '';
+
+                this.data.participants.forEach(participant => {
+                    const registrationCount = this.data.registrations.filter(
+                        r => r.participant_id === participant.id
+                    ).length;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${participant.name}</td>
+                        <td>${participant.email}</td>
+                        <td>${participant.phone || 'N/A'}</td>
+                        <td>${participant.organization || 'N/A'}</td>
+                        <td>${registrationCount}</td>
+                        <td>
+                            <div class="action-buttons-small">
+                                <button class="btn-sm btn-view" onclick="dashboard.viewParticipant(${participant.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-sm btn-delete" onclick="dashboard.deleteParticipant(${participant.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    participantsTable.appendChild(row);
+                });
+            }
+
+            loadRecentEvents() {
+                const recentEventsContainer = document.getElementById('recentEvents');
+                if (!recentEventsContainer) return;
+
+                const recentEvents = this.data.events
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 5);
+
+                if (recentEvents.length === 0) {
+                    recentEventsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>No events found</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Participants</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                recentEvents.forEach(event => {
+                    const eventDate = new Date(event.date);
+                    const today = new Date();
+                    const status = eventDate < today ? 'Completed' : 'Upcoming';
+                    const statusClass = eventDate < today ? 'status-completed' : 'status-upcoming';
+
+                    html += `
+                        <tr>
+                            <td>${event.title}</td>
+                            <td>${event.date}</td>
+                            <td>${event.current_participants}/${event.max_participants}</td>
+                            <td><span class="status-badge ${statusClass}">${status}</span></td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                recentEventsContainer.innerHTML = html;
+            }
+
+            openEventModal(eventId = null) {
+                const modal = document.getElementById('eventModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const form = document.getElementById('eventForm');
+                
+                if (eventId) {
+                    modalTitle.textContent = 'Edit Event';
+                    const event = this.data.events.find(e => e.id === eventId);
+                    if (event) {
+                        document.getElementById('eventId').value = event.id;
+                        document.getElementById('eventTitle').value = event.title;
+                        document.getElementById('eventDescription').value = event.description;
+                        document.getElementById('eventDate').value = event.date;
+                        document.getElementById('eventTime').value = event.time;
+                        document.getElementById('eventVenue').value = event.venue;
+                        document.getElementById('maxParticipants').value = event.max_participants;
+                    }
+                } else {
+                    modalTitle.textContent = 'Create New Event';
+                    form.reset();
+                    document.getElementById('eventId').value = '';
+                }
+                
+                modal.style.display = 'block';
+            }
+
+            async saveEvent() {
+                const eventData = {
+                    id: document.getElementById('eventId').value ? parseInt(document.getElementById('eventId').value) : null,
+                    title: document.getElementById('eventTitle').value,
+                    description: document.getElementById('eventDescription').value,
+                    date: document.getElementById('eventDate').value,
+                    time: document.getElementById('eventTime').value,
+                    venue: document.getElementById('eventVenue').value,
+                    max_participants: parseInt(document.getElementById('maxParticipants').value)
+                };
+                const isUpdate = Boolean(eventData.id);
+
+                try {
+                    await ApiClient.saveEvent(eventData);
+                    const events = await ApiClient.getEvents();
+                    DataStorage.saveEvents(events);
+                    this.data.events = events;
+                    this.loadEvents();
+                    this.loadRecentEvents();
+                    this.loadStats();
+                    displayEvents();
+
+                    this.showToast(`Event ${isUpdate ? 'updated' : 'created'} successfully!`, 'success');
+                    document.getElementById('eventModal').style.display = 'none';
+                } catch (error) {
+                    this.showToast(error.message, 'error');
+                }
+            }
+
+            deleteEvent(eventId) {
+                if (confirm('Are you sure you want to delete this event? All related registrations will also be deleted.')) {
+                    const events = this.data.events.filter(e => e.id !== eventId);
+                    const registrations = this.data.registrations.filter(r => r.event_id !== eventId);
+                    const attendance = this.data.attendance.filter(a => {
+                        const registration = this.data.registrations.find(r => r.id === a.registration_id);
+                        return !registration || registration.event_id !== eventId;
+                    });
+                    
+                    DataStorage.saveEvents(events);
+                    DataStorage.saveRegistrations(registrations);
+                    DataStorage.saveAttendance(attendance);
+                    
+                    this.data = { ...this.data, events, registrations, attendance };
+                    this.loadEvents();
+                    this.loadRecentEvents();
+                    this.loadStats();
+                    
+                    this.showToast('Event deleted successfully!', 'success');
+                }
+            }
+
+            editEvent(eventId) {
+                this.openEventModal(eventId);
+            }
+
+            viewEvent(eventId) {
+                const event = this.data.events.find(e => e.id === eventId);
+                if (event) {
+                    const registrations = this.data.registrations.filter(r => r.event_id === eventId);
+                    const participants = registrations.map(r => 
+                        this.data.participants.find(p => p.id === r.participant_id)
+                    ).filter(p => p);
+                    
+                    alert(`
+                        Event Details:
+                        
+                        Title: ${event.title}
+                        Description: ${event.description}
+                        Date: ${event.date}
+                        Time: ${event.time}
+                        Venue: ${event.venue}
+                        Organizer: ${event.organizer}
+                        Capacity: ${event.current_participants}/${event.max_participants}
+                        
+                        Registered Participants: ${participants.length}
+                        ${participants.map(p => `• ${p.name} (${p.email})`).join('\n')}
+                    `);
+                }
+            }
+
+            exportParticipants() {
+                const participants = this.data.participants;
+                if (participants.length === 0) {
+                    this.showToast('No participants to export', 'warning');
+                    return;
+                }
+
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Name,Email,Phone,Organization,Registration Date\n";
+                
+                participants.forEach(participant => {
+                    const row = [
+                        participant.name,
+                        participant.email,
+                        participant.phone || '',
+                        participant.organization || '',
+                        participant.created_at || ''
+                    ].map(cell => `"${cell}"`).join(',');
+                    csvContent += row + "\n";
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "participants.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                this.showToast('Participants exported successfully!', 'success');
+            }
+
+            loadAttendanceForEvent(eventId) {
+                if (!eventId) {
+                    this.showEmptyAttendance();
+                    return;
+                }
+
+                const event = this.data.events.find(e => e.id === parseInt(eventId));
+                if (!event) {
+                    this.showEmptyAttendance();
+                    return;
+                }
+
+                const registrations = this.data.registrations.filter(r => r.event_id === parseInt(eventId));
+                const container = document.getElementById('attendanceContainer');
+                
+                this.populateEventSelect();
+                this.updateAttendanceSummary(eventId);
+                this.showAttendanceTimeline(eventId);
+                
+                let html = `
+                    <h3 style="padding: 1rem; margin: 0; background: #f8f9fa;">
+                        <i class="fas fa-calendar-check"></i> ${event.title} - Attendance Management
+                    </h3>
+                    <div style="padding: 1rem;">
+                        <p><strong>Date:</strong> ${event.date} | <strong>Time:</strong> ${event.time}</p>
+                        <p><strong>Venue:</strong> ${event.venue} | <strong>Registered:</strong> ${registrations.length} participants</p>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Participant Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registration Date</th>
+                                <th>Status</th>
+                                <th>Check-in Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                registrations.forEach(registration => {
+                    const participant = this.data.participants.find(p => p.id === registration.participant_id);
+                    const attendance = this.data.attendance.find(a => 
+                        a.registration_id === registration.id && a.attendance_date === event.date
+                    );
+
+                    if (participant) {
+                        const status = attendance?.status || 'absent';
+                        const statusClass = `status-${status}`;
+                        const checkInTime = attendance?.check_in_time ? 
+                            new Date(attendance.check_in_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 
+                            'Not checked in';
+                        
+                        html += `
+                            <tr data-registration-id="${registration.id}" data-participant-id="${participant.id}">
+                                <td><input type="checkbox" class="participant-checkbox" value="${registration.id}"></td>
+                                <td>${participant.name}</td>
+                                <td>${participant.email}</td>
+                                <td>${participant.phone || 'N/A'}</td>
+                                <td>${new Date(registration.registration_date).toLocaleDateString()}</td>
+                                <td>
+                                    <span class="attendance-status ${statusClass}" id="status-${registration.id}">
+                                        ${status.toUpperCase()}
+                                    </span>
+                                </td>
+                                <td id="time-${registration.id}">${checkInTime}</td>
+                                <td>
+                                    <div class="action-buttons-small">
+                                        <button class="btn-sm btn-primary" onclick="dashboard.markSingleAttendance(${registration.id}, 'present')">
+                                            <i class="fas fa-check"></i> Present
+                                        </button>
+                                        <button class="btn-sm btn-secondary" onclick="dashboard.markSingleAttendance(${registration.id}, 'absent')">
+                                            <i class="fas fa-times"></i> Absent
+                                        </button>
+                                        <button class="btn-sm btn-warning" onclick="dashboard.markSingleAttendance(${registration.id}, 'late')">
+                                            <i class="fas fa-clock"></i> Late
+                                        </button>
+                                        ${participant.email ? `
+                                            <button class="btn-sm btn-info" onclick="dashboard.generateQRForParticipant('${participant.email}', ${event.id})">
+                                                <i class="fas fa-qrcode"></i> QR
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+
+                this.setupAttendanceEventListeners(eventId);
+            }
+
+            populateEventSelect() {
+                const select = document.getElementById('eventSelectAttendance');
+                if (!select) return;
+                
+                select.innerHTML = '<option value="">Select Event</option>';
+                
+                this.data.events.forEach(event => {
+                    const option = document.createElement('option');
+                    option.value = event.id;
+                    option.textContent = `${event.title} (${event.date})`;
+                    select.appendChild(option);
+                });
+                
+                const currentEventId = sessionStorage.getItem('currentAttendanceEvent');
+                if (currentEventId) {
+                    select.value = currentEventId;
+                }
+            }
+
+            updateAttendanceSummary(eventId) {
+                if (!eventId) return;
+                
+                const registrations = this.data.registrations.filter(r => r.event_id === parseInt(eventId));
+                const event = this.data.events.find(e => e.id === parseInt(eventId));
+                
+                let present = 0, absent = 0, late = 0;
+                
+                registrations.forEach(registration => {
+                    const attendance = this.data.attendance.find(a => 
+                        a.registration_id === registration.id && a.attendance_date === event.date
+                    );
+                    
+                    if (attendance) {
+                        if (attendance.status === 'present') present++;
+                        if (attendance.status === 'absent') absent++;
+                        if (attendance.status === 'late') late++;
+                    } else {
+                        absent++;
+                    }
+                });
+                
+                document.getElementById('presentCount').textContent = present;
+                document.getElementById('absentCount').textContent = absent;
+                document.getElementById('lateCount').textContent = late;
+            }
+
+            showAttendanceTimeline(eventId) {
+                const timeline = document.getElementById('attendanceTimeline');
+                if (!timeline) return;
+                
+                const event = this.data.events.find(e => e.id === parseInt(eventId));
+                if (!event) return;
+                
+                const recentAttendance = this.data.attendance
+                    .filter(a => {
+                        const registration = this.data.registrations.find(r => r.id === a.registration_id);
+                        return registration && registration.event_id === parseInt(eventId);
+                    })
+                    .sort((a, b) => new Date(b.marked_at || b.check_in_time) - new Date(a.marked_at || a.check_in_time))
+                    .slice(0, 10);
+                
+                if (recentAttendance.length === 0) {
+                    timeline.innerHTML = `
+                        <h3>Recent Attendance Markings</h3>
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>No attendance markings yet</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '<h3>Recent Attendance Markings</h3>';
+                
+                recentAttendance.forEach(attendance => {
+                    const registration = this.data.registrations.find(r => r.id === attendance.registration_id);
+                    const participant = registration ? 
+                        this.data.participants.find(p => p.id === registration.participant_id) : null;
+                    
+                    if (participant) {
+                        const time = new Date(attendance.marked_at || attendance.check_in_time);
+                        const statusClass = `status-${attendance.status}`;
+                        
+                        html += `
+                            <div class="timeline-item">
+                                <div class="timeline-time">
+                                    ${time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                </div>
+                                <div class="timeline-content">
+                                    <h4>${participant.name}</h4>
+                                    <p>
+                                        <span class="attendance-status ${statusClass}">
+                                            ${attendance.status.toUpperCase()}
+                                        </span>
+                                        - Marked by ${attendance.marked_by || 'System'}
+                                    </p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                timeline.innerHTML = html;
+            }
+
+            setupAttendanceEventListeners(eventId) {
+                document.getElementById('selectAll')?.addEventListener('change', (e) => {
+                    const checkboxes = document.querySelectorAll('.participant-checkbox');
+                    checkboxes.forEach(cb => cb.checked = e.target.checked);
+                });
+
+                document.getElementById('bulkPresent')?.addEventListener('click', () => {
+                    this.bulkMarkAttendance('present', eventId);
+                });
+
+                document.getElementById('bulkAbsent')?.addEventListener('click', () => {
+                    this.bulkMarkAttendance('absent', eventId);
+                });
+
+                document.getElementById('bulkLate')?.addEventListener('click', () => {
+                    this.bulkMarkAttendance('late', eventId);
+                });
+
+                document.getElementById('applyFilters')?.addEventListener('click', () => {
+                    this.applyAttendanceFilters(eventId);
+                });
+
+                document.getElementById('clearFilters')?.addEventListener('click', () => {
+                    this.clearAttendanceFilters(eventId);
+                });
+
+                document.getElementById('filterSearch')?.addEventListener('input', () => {
+                    this.applyAttendanceFilters(eventId);
+                });
+
+                document.getElementById('filterStatus')?.addEventListener('change', () => {
+                    this.applyAttendanceFilters(eventId);
+                });
+
+                document.getElementById('exportAttendanceBtn')?.addEventListener('click', () => {
+                    this.exportAttendance(eventId);
+                });
+            }
+
+            markSingleAttendance(registrationId, status) {
+                const registration = this.data.registrations.find(r => r.id === registrationId);
+                if (!registration) return;
+
+                const event = this.data.events.find(e => e.id === registration.event_id);
+                if (!event) return;
+
+                let attendance = [...this.data.attendance];
+                const existingIndex = attendance.findIndex(a => 
+                    a.registration_id === registrationId && a.attendance_date === event.date
+                );
+
+                if (existingIndex !== -1) {
+                    attendance[existingIndex].status = status;
+                    attendance[existingIndex].check_in_time = status !== 'absent' ? 
+                        new Date().toISOString() : null;
+                    attendance[existingIndex].marked_at = new Date().toISOString();
+                    attendance[existingIndex].marked_by = this.currentUser.name;
+                } else {
+                    attendance.push({
+                        id: attendance.length > 0 ? Math.max(...attendance.map(a => a.id)) + 1 : 1,
+                        registration_id: registrationId,
+                        attendance_date: event.date,
+                        status: status,
+                        check_in_time: status !== 'absent' ? new Date().toISOString() : null,
+                        check_out_time: null,
+                        marked_by: this.currentUser.name,
+                        marked_at: new Date().toISOString()
+                    });
+                }
+
+                DataStorage.saveAttendance(attendance);
+                this.data.attendance = attendance;
+                
+                const statusSpan = document.getElementById(`status-${registrationId}`);
+                const timeSpan = document.getElementById(`time-${registrationId}`);
+                
+                if (statusSpan) {
+                    statusSpan.className = `attendance-status status-${status}`;
+                    statusSpan.textContent = status.toUpperCase();
+                    statusSpan.classList.add('status-updated');
+                    setTimeout(() => statusSpan.classList.remove('status-updated'), 500);
+                }
+                
+                if (timeSpan) {
+                    timeSpan.textContent = status !== 'absent' ? 
+                        new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 
+                        'Not checked in';
+                }
+                
+                this.updateAttendanceSummary(registration.event_id);
+                this.showAttendanceTimeline(registration.event_id);
+                
+                const participant = this.data.participants.find(p => p.id === registration.participant_id);
+                if (participant) {
+                    this.showToast(`${participant.name} marked as ${status}`, 'success');
+                }
+            }
+
+            bulkMarkAttendance(status, eventId) {
+                const checkboxes = document.querySelectorAll('.participant-checkbox:checked');
+                if (checkboxes.length === 0) {
+                    this.showToast('Please select participants first', 'warning');
+                    return;
+                }
+
+                if (confirm(`Mark ${checkboxes.length} selected participants as ${status}?`)) {
+                    checkboxes.forEach(checkbox => {
+                        const registrationId = parseInt(checkbox.value);
+                        this.markSingleAttendance(registrationId, status);
+                    });
+                    
+                    this.showToast(`${checkboxes.length} participants marked as ${status}`, 'success');
+                }
+            }
+
+            applyAttendanceFilters(eventId) {
+                const searchTerm = document.getElementById('filterSearch').value.toLowerCase();
+                const statusFilter = document.getElementById('filterStatus').value;
+                
+                const rows = document.querySelectorAll('#attendanceContainer tbody tr');
+                rows.forEach(row => {
+                    const name = row.cells[1].textContent.toLowerCase();
+                    const email = row.cells[2].textContent.toLowerCase();
+                    const statusSpan = row.querySelector('.attendance-status');
+                    const status = statusSpan ? statusSpan.textContent.toLowerCase() : '';
+                    
+                    const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
+                    const matchesStatus = statusFilter === 'all' || status.includes(statusFilter);
+                    
+                    row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                });
+            }
+
+            clearAttendanceFilters(eventId) {
+                document.getElementById('filterSearch').value = '';
+                document.getElementById('filterStatus').value = 'all';
+                this.loadAttendanceForEvent(eventId);
+            }
+
+            exportAttendance(eventId) {
+                const csvContent = AttendanceManager.exportAttendanceToCSV(eventId);
+                if (!csvContent) {
+                    this.showToast('No data to export', 'warning');
+                    return;
+                }
+
+                const event = this.data.events.find(e => e.id === eventId);
+                const fileName = `attendance_${event?.title.replace(/\s+/g, '_')}_${event?.date}.csv`;
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                this.showToast('Attendance exported successfully', 'success');
+            }
+
+            openQRScanner() {
+                const modal = document.getElementById('qrScannerModal');
+                modal.style.display = 'block';
+                
+                if (typeof Html5QrcodeScanner !== 'undefined') {
+                    const html5QrCode = new Html5QrcodeScanner(
+                        "qr-reader",
+                        { fps: 10, qrbox: 250 }
+                    );
+                    
+                    html5QrCode.render((decodedText) => {
+                        this.handleQRScan(decodedText);
+                        html5QrCode.clear();
+                    });
+                } else {
+                    document.getElementById('qr-reader').innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff9800;"></i>
+                            <h3>QR Scanner Library Not Loaded</h3>
+                            <p>Please include the HTML5 QR Code library to use this feature.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            handleQRScan(qrData) {
+                try {
+                    const data = JSON.parse(qrData);
+                    if (data.type === 'event_registration' && data.participantEmail && data.eventId) {
+                        const result = AttendanceManager.markAttendance(data.eventId, data.participantEmail, 'present');
+                        
+                        document.getElementById('qr-reader-results').innerHTML = `
+                            <div style="padding: 1rem; background: ${result.success ? '#d4edda' : '#f8d7da'}; 
+                                border-radius: 5px; margin-top: 1rem;">
+                                <h4 style="margin: 0 0 10px 0; color: ${result.success ? '#155724' : '#721c24'}">
+                                    <i class="fas fa-${result.success ? 'check' : 'times'}-circle"></i>
+                                    ${result.success ? 'Success!' : 'Error'}
+                                </h4>
+                                <p style="margin: 0;">${result.message}</p>
+                            </div>
+                        `;
+                        
+                        if (result.success) {
+                            setTimeout(() => {
+                                document.getElementById('qrScannerModal').style.display = 'none';
+                                this.loadAttendanceForEvent(data.eventId);
+                            }, 2000);
+                        }
+                    } else {
+                        document.getElementById('qr-reader-results').innerHTML = `
+                            <div style="padding: 1rem; background: #fff3cd; border-radius: 5px; margin-top: 1rem;">
+                                <h4 style="margin: 0 0 10px 0; color: #856404;">
+                                    <i class="fas fa-exclamation-triangle"></i> Invalid QR Code
+                                </h4>
+                                <p style="margin: 0;">This is not a valid event registration QR code.</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('qr-reader-results').innerHTML = `
+                        <div style="padding: 1rem; background: #f8d7da; border-radius: 5px; margin-top: 1rem;">
+                            <h4 style="margin: 0 0 10px 0; color: #721c24;">
+                                <i class="fas fa-times-circle"></i> Error Reading QR Code
+                            </h4>
+                            <p style="margin: 0;">Could not read the QR code. Please try again.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            generateQRForParticipant(email, eventId) {
+                const qrData = generateParticipantQR(email, eventId);
+                const participant = this.data.participants.find(p => p.email === email);
+                const event = this.data.events.find(e => e.id === eventId);
+                
+                const qrModal = document.createElement('div');
+                qrModal.className = 'modal';
+                qrModal.innerHTML = `
+                    <div class="modal-content" style="max-width: 400px;">
+                        <span class="close">&times;</span>
+                        <h2>Attendance QR Code</h2>
+                        <div class="qr-code-container">
+                            <p><strong>Participant:</strong> ${participant?.name || email}</p>
+                            <p><strong>Event:</strong> ${event?.title || 'Unknown Event'}</p>
+                            <div id="participantQRCode" class="qr-code"></div>
+                            <div class="qr-instructions">
+                                <i class="fas fa-info-circle"></i>
+                                Show this QR code at the event venue for attendance marking
+                            </div>
+                            <div class="action-buttons" style="margin-top: 1rem;">
+                                <button onclick="printQRCode()" class="btn-primary">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                                <button onclick="dashboard.downloadQRCode('${email}', ${eventId})" class="btn-secondary">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(qrModal);
+                
+                const closeBtn = qrModal.querySelector('.close');
+                closeBtn.addEventListener('click', () => {
+                    qrModal.style.display = 'none';
+                    document.body.removeChild(qrModal);
+                });
+                
+                window.addEventListener('click', (e) => {
+                    if (e.target === qrModal) {
+                        qrModal.style.display = 'none';
+                        document.body.removeChild(qrModal);
+                    }
+                });
+                
+                qrModal.style.display = 'block';
+                
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(document.getElementById("participantQRCode"), {
+                        text: qrData,
+                        width: 200,
+                        height: 200
+                    });
+                }
+            }
+
+            downloadQRCode(email, eventId) {
+                const qrDiv = document.getElementById('participantQRCode');
+                if (!qrDiv) return;
+                
+                const canvas = qrDiv.querySelector('canvas');
+                if (!canvas) {
+                    this.showToast('QR code not generated yet', 'warning');
+                    return;
+                }
+                
+                const link = document.createElement('a');
+                link.download = `qr_${email}_${eventId}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+
+            showEmptyAttendance() {
+                const container = document.getElementById('attendanceContainer');
+                if (!container) return;
+                
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check" style="font-size: 3rem; color: #ddd;"></i>
+                        <h3>No Event Selected</h3>
+                        <p>Please select an event from the dropdown to view and manage attendance.</p>
+                        <button onclick="dashboard.showSection('events')" class="btn-primary">
+                            <i class="fas fa-calendar-plus"></i> Create New Event
+                        </button>
+                    </div>
+                `;
+            }
+
+            markAllPresent() {
+                const eventId = document.getElementById('eventSelectAttendance').value;
+                if (!eventId) {
+                    this.showToast('Please select an event first', 'warning');
+                    return;
+                }
+
+                if (confirm('Mark all registered participants as present?')) {
+                    const registrations = this.data.registrations.filter(r => r.event_id === parseInt(eventId));
+                    const event = this.data.events.find(e => e.id === parseInt(eventId));
+                    
+                    let attendance = [...this.data.attendance];
+                    
+                    registrations.forEach(registration => {
+                        const existingIndex = attendance.findIndex(a => 
+                            a.registration_id === registration.id && a.attendance_date === event.date
+                        );
+
+                        if (existingIndex !== -1) {
+                            attendance[existingIndex].status = 'present';
+                            attendance[existingIndex].check_in_time = new Date().toISOString();
+                        } else {
+                            attendance.push({
+                                id: attendance.length > 0 ? Math.max(...attendance.map(a => a.id)) + 1 : 1,
+                                registration_id: registration.id,
+                                attendance_date: event.date,
+                                status: 'present',
+                                check_in_time: new Date().toISOString(),
+                                check_out_time: null,
+                                marked_by: this.currentUser.name,
+                                marked_at: new Date().toISOString()
+                            });
+                        }
+                    });
+
+                    DataStorage.saveAttendance(attendance);
+                    this.data.attendance = attendance;
+                    this.loadAttendanceForEvent(eventId);
+                    this.showToast('All participants marked as present!', 'success');
+                }
+            }
+
+            generateReport() {
+                if (typeof Chart !== 'undefined') {
+                    this.createEventChart();
+                    this.createAttendanceChart();
+                }
+            }
+
+            createEventChart() {
+                const ctx = document.getElementById('eventChart');
+                if (!ctx) return;
+
+                const events = this.data.events;
+                const completed = events.filter(e => new Date(e.date) < new Date()).length;
+                const upcoming = events.filter(e => new Date(e.date) >= new Date()).length;
+                const full = events.filter(e => e.current_participants >= e.max_participants).length;
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Completed', 'Upcoming', 'Full'],
+                        datasets: [{
+                            data: [completed, upcoming, full],
+                            backgroundColor: ['#4caf50', '#2196f3', '#ff9800']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            createAttendanceChart() {
+                const ctx = document.getElementById('attendanceChart');
+                if (!ctx) return;
+
+                const attendance = this.data.attendance;
+                const present = attendance.filter(a => a.status === 'present').length;
+                const absent = attendance.filter(a => a.status === 'absent').length;
+                const late = attendance.filter(a => a.status === 'late').length;
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Present', 'Absent', 'Late'],
+                        datasets: [{
+                            label: 'Attendance Count',
+                            data: [present, absent, late],
+                            backgroundColor: ['#4caf50', '#f44336', '#ff9800']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            generatePDFReport() {
+                alert('PDF report generation would require additional libraries. Here\'s a summary:\n\n' +
+                      `Total Events: ${this.data.events.length}\n` +
+                      `Total Participants: ${this.data.participants.length}\n` +
+                      `Total Registrations: ${this.data.registrations.length}\n` +
+                      `Attendance Records: ${this.data.attendance.length}\n\n` +
+                      'For full PDF export functionality, you would need to integrate a PDF library like jsPDF or pdfmake.');
+            }
+
+            exportToExcel() {
+                const data = {
+                    Events: this.data.events,
+                    Participants: this.data.participants,
+                    Registrations: this.data.registrations,
+                    Attendance: this.data.attendance
+                };
+
+                let csvContent = "data:text/csv;charset=utf-8,";
+                
+                Object.keys(data).forEach(sheetName => {
+                    csvContent += `=== ${sheetName} ===\n`;
+                    const sheetData = data[sheetName];
+                    
+                    if (sheetData.length > 0) {
+                        const headers = Object.keys(sheetData[0]).join(',');
+                        csvContent += headers + "\n";
+                        
+                        sheetData.forEach(row => {
+                            const values = Object.values(row).map(value => 
+                                `"${String(value).replace(/"/g, '""')}"`
+                            ).join(',');
+                            csvContent += values + "\n";
+                        });
+                    }
+                    csvContent += "\n";
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "event_tracker_export.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                this.showToast('Data exported successfully!', 'success');
+            }
+
+            updateProfile() {
+                const name = document.getElementById('profileName').value;
+                const email = document.getElementById('profileEmail').value;
+                
+                if (!name || !email) {
+                    this.showToast('Please fill in all fields', 'warning');
+                    return;
+                }
+
+                this.currentUser.name = name;
+                this.currentUser.email = email;
+                DataStorage.setCurrentUser(this.currentUser);
+
+                let users = this.data.users;
+                const userIndex = users.findIndex(u => u.email === this.currentUser.email);
+                if (userIndex !== -1) {
+                    users[userIndex].name = name;
+                    users[userIndex].email = email;
+                    DataStorage.saveUsers(users);
+                }
+
+                this.updateWelcomeMessage();
+                this.showToast('Profile updated successfully!', 'success');
+            }
+
+            changePassword() {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                
+                if (!currentPassword || !newPassword) {
+                    this.showToast('Please fill in all fields', 'warning');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    this.showToast('New password must be at least 6 characters long', 'warning');
+                    return;
+                }
+
+                const users = this.data.users;
+                const userIndex = users.findIndex(u => u.email === this.currentUser.email);
+                
+                if (userIndex === -1 || users[userIndex].password !== currentPassword) {
+                    this.showToast('Current password is incorrect', 'error');
+                    return;
+                }
+
+                users[userIndex].password = newPassword;
+                DataStorage.saveUsers(users);
+                
+                document.getElementById('passwordForm').reset();
+                this.showToast('Password changed successfully!', 'success');
+            }
+
+            showToast(message, type = 'info') {
+                const existingToast = document.querySelector('.toast');
+                if (existingToast) existingToast.remove();
+                
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.innerHTML = `
+                    <div class="toast-content">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                            type === 'warning' ? 'exclamation-triangle' : 
+                            type === 'error' ? 'times-circle' : 'info-circle'}"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button class="toast-close">&times;</button>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+                
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    toast.remove();
+                });
+            }
+
+            showMainPage() {
+                document.getElementById('mainPage').style.display = 'block';
+                document.getElementById('dashboardPage').style.display = 'none';
+                window.location.hash = '';
+            }
+
+            showDashboard() {
+                document.getElementById('mainPage').style.display = 'none';
+                document.getElementById('dashboardPage').style.display = 'block';
+                window.location.hash = 'dashboard';
+            }
+        }
+
+        // ====================
+        // MAIN PAGE FUNCTIONS
+        // ====================
+        function initializeMainPage() {
+            // Initialize sample data
+            if (!localStorage.getItem('cbs_events')) {
+                DataStorage.saveEvents(DataStorage.getEvents());
+            }
+            
+            if (!localStorage.getItem('cbs_users')) {
+                DataStorage.saveUsers(DataStorage.getUsers());
+            }
+            
+            if (!localStorage.getItem('cbs_participants')) {
+                DataStorage.saveParticipants(DataStorage.getParticipants());
+            }
+            
+            if (!localStorage.getItem('cbs_registrations')) {
+                DataStorage.saveRegistrations(DataStorage.getRegistrations());
+            }
+            
+            if (!localStorage.getItem('cbs_attendance')) {
+                DataStorage.saveAttendance(DataStorage.getAttendance());
+            }
+            
+            displayEvents();
+            
+            // Check if user is already logged in
+            const currentUser = DataStorage.getCurrentUser();
+            if (currentUser && window.location.hash === '#dashboard') {
+                dashboard.showDashboard();
+            }
+        }
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const viewEventsBtn = document.getElementById('viewEventsBtn');
+        const registerEventBtn = document.getElementById('registerEventBtn');
+        const checkAttendanceBtn = document.getElementById('checkAttendanceBtn');
+        const loginModal = document.getElementById('loginModal');
+        const registrationModal = document.getElementById('registrationModal');
+        const attendanceModal = document.getElementById('attendanceModal');
+        const loginForm = document.getElementById('loginForm');
+        const registrationForm = document.getElementById('registrationForm');
+        const attendanceCheckForm = document.getElementById('attendanceCheckForm');
+        const eventsContainer = document.getElementById('eventsContainer');
+        const eventSelect = document.getElementById('eventSelect');
+
+        // Event Listeners for Main Page
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => {
+                const currentUser = DataStorage.getCurrentUser();
+                if (currentUser) {
+                    dashboard.showDashboard();
+                } else {
+                    loginModal.style.display = 'block';
+                }
+            });
+        }
+
+        if (registerEventBtn) {
+            registerEventBtn.addEventListener('click', () => {
+                openRegistrationModal();
+            });
+        }
+
+        if (viewEventsBtn) {
+            viewEventsBtn.addEventListener('click', () => {
+                displayEvents(true);
+            });
+        }
+
+        if (checkAttendanceBtn) {
+            checkAttendanceBtn.addEventListener('click', () => {
+                openAttendanceCheckModal();
+            });
+        }
+
+        // Modal Controls
+        document.querySelectorAll('.close').forEach(button => {
+            button.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                registrationModal.style.display = 'none';
+                attendanceModal.style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (event.target === registrationModal) {
+                registrationModal.style.display = 'none';
+            }
+            if (event.target === attendanceModal) {
+                attendanceModal.style.display = 'none';
+            }
+        });
+
+        // Login Functionality
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const users = DataStorage.getUsers();
+                
+                const user = users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    const { password, ...userInfo } = user;
+                    DataStorage.setCurrentUser(userInfo);
+                    
+                    showToast('Login successful!', 'success');
+                    loginModal.style.display = 'none';
+                    dashboard.showDashboard();
+                } else {
+                    showToast('Invalid email or password', 'error');
+                }
+            });
+        }
+
+        // Event Registration Functionality
+        function openRegistrationModal() {
+            const events = DataStorage.getEvents();
+            eventSelect.innerHTML = '';
+            
+            events.forEach(event => {
+                if (event.current_participants < event.max_participants) {
+                    const option = document.createElement('option');
+                    option.value = event.id;
+                    option.textContent = `${event.title} (${event.date})`;
+                    eventSelect.appendChild(option);
+                }
+            });
+            
+            if (eventSelect.options.length === 0) {
+                showToast('No events available for registration', 'warning');
+                return;
+            }
+            
+            registrationModal.style.display = 'block';
+        }
+
+        if (registrationForm) {
+            registrationForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const eventId = parseInt(eventSelect.value);
+                const name = document.getElementById('participantName').value;
+                const email = document.getElementById('participantEmail').value;
+                const phone = document.getElementById('participantPhone').value;
+                const organization = document.getElementById('participantOrg').value;
+                
+                const events = DataStorage.getEvents();
+                const event = events.find(e => e.id === eventId);
+                
+                if (!event) {
+                    showToast('Event not found', 'error');
+                    return;
+                }
+                
+                if (event.current_participants >= event.max_participants) {
+                    showToast('Event is full', 'warning');
+                    return;
+                }
+
+                try {
+                    const result = await ApiClient.registerParticipant({
+                        event_id: eventId,
+                        name,
+                        email,
+                        phone,
+                        organization
+                    });
+
+                    DataStorage.saveEvents(result.events);
+                    if (dashboard?.data) {
+                        dashboard.data.events = result.events;
+                        dashboard.loadEvents();
+                        dashboard.loadRecentEvents();
+                        dashboard.loadStats();
+                    }
+
+                    registrationForm.reset();
+                    showToast(`Successfully registered for ${event.title}!`, 'success');
+                    registrationModal.style.display = 'none';
+                    displayEvents();
+                    showRegistrationQR(email, eventId);
+                } catch (error) {
+                    showToast(error.message, 'error');
+                }
+            });
+        }
+
+        // Display Events
+        function displayEvents(highlight = false) {
+            if (!eventsContainer) return;
+            
+            const events = DataStorage.getEvents();
+            
+            if (events.length === 0) {
+                eventsContainer.innerHTML = '<p class="no-events">No events available at the moment.</p>';
+                return;
+            }
+            
+            eventsContainer.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                
+                const eventDate = new Date(event.date);
+                const today = new Date();
+                const isUpcoming = eventDate >= today;
+                
+                eventCard.innerHTML = `
+                    <div class="event-header" style="background: ${isUpcoming ? '#2196f3' : '#757575'}">
+                        <h3>${event.title}</h3>
+                    </div>
+                    <div class="event-body">
+                        <p>${event.description}</p>
+                        <div class="event-meta">
+                            <span><i class="far fa-calendar"></i> ${event.date}</span>
+                            <span><i class="far fa-clock"></i> ${event.time}</span>
+                        </div>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> ${event.venue}</span>
+                            <span><i class="fas fa-users"></i> ${event.current_participants}/${event.max_participants}</span>
+                        </div>
+                        <div class="event-actions">
+                            <button class="btn-primary register-btn" data-id="${event.id}">
+                                ${isUpcoming ? 'Register Now' : 'Event Ended'}
+                            </button>
+                            ${isUpcoming ? `
+                                <button class="btn-secondary details-btn" data-id="${event.id}">
+                                    View Details
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                eventsContainer.appendChild(eventCard);
+            });
+            
+            document.querySelectorAll('.register-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const eventId = parseInt(e.target.dataset.id);
+                    openRegistrationForEvent(eventId);
+                });
+            });
+            
+            document.querySelectorAll('.details-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const eventId = parseInt(e.target.dataset.id);
+                    showEventDetails(eventId);
+                });
+            });
+            
+            if (highlight) {
+                eventsContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function openRegistrationForEvent(eventId) {
+            const events = DataStorage.getEvents();
+            const event = events.find(e => e.id === eventId);
+            
+            if (!event) return;
+            
+            const eventDate = new Date(event.date);
+            const today = new Date();
+            
+            if (eventDate < today) {
+                showToast('This event has already ended', 'warning');
+                return;
+            }
+            
+            if (event.current_participants >= event.max_participants) {
+                showToast('Event is full', 'warning');
+                return;
+            }
+            
+            openRegistrationModal();
+            eventSelect.value = eventId;
+        }
+
+        function showEventDetails(eventId) {
+            const events = DataStorage.getEvents();
+            const event = events.find(e => e.id === eventId);
+            
+            if (!event) return;
+            
+            alert(`
+                Event Details:
+                
+                Title: ${event.title}
+                Description: ${event.description}
+                Date: ${event.date}
+                Time: ${event.time}
+                Venue: ${event.venue}
+                Maximum Participants: ${event.max_participants}
+                Registered Participants: ${event.current_participants}
+                Available Slots: ${event.max_participants - event.current_participants}
+                Organizer: ${event.organizer}
+            `);
+        }
+
+        // Attendance Check Functions
+        function openAttendanceCheckModal() {
+            const events = DataStorage.getEvents();
+            const checkEventSelect = document.getElementById('checkEvent');
+            checkEventSelect.innerHTML = '<option value="">Select Event</option>';
+            
+            events.forEach(event => {
+                const option = document.createElement('option');
+                option.value = event.id;
+                option.textContent = `${event.title} (${event.date})`;
+                checkEventSelect.appendChild(option);
+            });
+            
+            document.getElementById('attendanceResult').style.display = 'none';
+            attendanceModal.style.display = 'block';
+        }
+
+        if (attendanceCheckForm) {
+            attendanceCheckForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('checkEmail').value;
+                const eventId = parseInt(document.getElementById('checkEvent').value);
+                
+                const attendance = AttendanceManager.getParticipantAttendance(email);
+                const eventAttendance = attendance.find(a => {
+                    const events = DataStorage.getEvents();
+                    const event = events.find(e => e.id === eventId);
+                    return event && a.event_date === event.date;
+                });
+                
+                const resultDiv = document.getElementById('attendanceResult');
+                const detailsDiv = document.getElementById('attendanceDetails');
+                
+                if (eventAttendance) {
+                    detailsDiv.innerHTML = `
+                        <div style="padding: 15px; background: #e8f5e9; border-radius: 5px; margin-bottom: 10px;">
+                            <h4 style="color: #2e7d32; margin: 0 0 10px 0;">
+                                <i class="fas fa-check-circle"></i> Attendance Record Found
+                            </h4>
+                            <p><strong>Event:</strong> ${eventAttendance.event_title}</p>
+                            <p><strong>Date:</strong> ${eventAttendance.event_date}</p>
+                            <p><strong>Status:</strong> 
+                                <span class="status-badge ${eventAttendance.attendance_status === 'present' ? 'status-present' : 
+                                    eventAttendance.attendance_status === 'late' ? 'status-late' : 'status-absent'}">
+                                    ${eventAttendance.attendance_status.toUpperCase()}
+                                </span>
+                            </p>
+                            ${eventAttendance.check_in_time ? 
+                                `<p><strong>Check-in Time:</strong> ${new Date(eventAttendance.check_in_time).toLocaleString()}</p>` : ''}
+                            ${eventAttendance.marked_by ? 
+                                `<p><strong>Marked By:</strong> ${eventAttendance.marked_by}</p>` : ''}
+                        </div>
+                    `;
+                } else {
+                    detailsDiv.innerHTML = `
+                        <div style="padding: 15px; background: #ffebee; border-radius: 5px;">
+                            <h4 style="color: #c62828; margin: 0 0 10px 0;">
+                                <i class="fas fa-exclamation-circle"></i> No Attendance Record Found
+                            </h4>
+                            <p>No attendance record found for this email and event.</p>
+                            <p>Please ensure you registered for the event and attendance was marked.</p>
+                        </div>
+                    `;
+                }
+                
+                resultDiv.style.display = 'block';
+            });
+        }
+
+        // QR Code Functions
+        function generateParticipantQR(email, eventId) {
+            const qrData = {
+                type: 'event_registration',
+                participantEmail: email,
+                eventId: eventId,
+                timestamp: new Date().toISOString()
+            };
+            
+            return JSON.stringify(qrData);
+        }
+
+        function showRegistrationQR(email, eventId) {
+            const events = DataStorage.getEvents();
+            const event = events.find(e => e.id === eventId);
+            
+            const qrModal = document.createElement('div');
+            qrModal.className = 'modal';
+            qrModal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px;">
+                    <span class="close">&times;</span>
+                    <h2>Registration Successful!</h2>
+                    <div class="qr-code-container">
+                        <h3>Your Attendance QR Code</h3>
+                        <p>Save this QR code for attendance marking:</p>
+                        <div id="qrcode" class="qr-code"></div>
+                        <p><strong>Email:</strong> ${email}</p>
+                        <p><strong>Event:</strong> ${event?.title || 'Unknown Event'}</p>
+                        <div class="qr-instructions">
+                            <i class="fas fa-info-circle"></i>
+                            Show this QR code at the event venue for attendance marking
+                        </div>
+                        <button onclick="printQRCode()" class="btn-primary" style="margin-top: 1rem;">
+                            <i class="fas fa-print"></i> Print QR Code
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(qrModal);
+            
+            const closeBtn = qrModal.querySelector('.close');
+            closeBtn.addEventListener('click', () => {
+                qrModal.style.display = 'none';
+                document.body.removeChild(qrModal);
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === qrModal) {
+                    qrModal.style.display = 'none';
+                    document.body.removeChild(qrModal);
+                }
+            });
+            
+            qrModal.style.display = 'block';
+            
+            if (typeof QRCode !== 'undefined') {
+                new QRCode(document.getElementById("qrcode"), {
+                    text: generateParticipantQR(email, eventId),
+                    width: 200,
+                    height: 200
+                });
+            } else {
+                document.getElementById('qrcode').innerHTML = `
+                    <div style="padding: 2rem; background: #f8f9fa; border-radius: 5px;">
+                        <p>QR Code generation requires QRCode.js library</p>
+                    </div>
+                `;
+            }
+        }
+
+        function printQRCode() {
+            window.print();
+        }
+
+        function showToast(message, type = 'info') {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                        type === 'warning' ? 'exclamation-triangle' : 
+                        type === 'error' ? 'times-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+            
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.remove();
+            });
+        }
+
+        // Initialize Dashboard
+        const dashboard = new DashboardManager();
+
+        // Make dashboard available globally
+        window.dashboard = dashboard;
+        window.generateParticipantQR = generateParticipantQR;
+        window.printQRCode = printQRCode;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', initializeMainPage);
+    </script>
+</body>
+</html>
