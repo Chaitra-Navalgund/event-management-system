@@ -1556,7 +1556,9 @@
 
     <!-- JavaScript Code -->
     <script>
-        const SERVER_DATA = {{ initial_data|tojson }};
+        // GitHub Pages serves this file as static HTML, so it cannot render Flask templates.
+        // Keep server data optional and use the browser's localStorage demo data by default.
+        const SERVER_DATA = {};
 
         // ====================
         // DATA STORAGE CLASS
@@ -2279,7 +2281,29 @@
                     this.showToast(`Event ${isUpdate ? 'updated' : 'created'} successfully!`, 'success');
                     document.getElementById('eventModal').style.display = 'none';
                 } catch (error) {
-                    this.showToast(error.message, 'error');
+                    // GitHub Pages has no Flask API. Keep event management usable locally.
+                    const events = DataStorage.getEvents();
+                    if (isUpdate) {
+                        const index = events.findIndex(event => event.id === eventData.id);
+                        if (index === -1) {
+                            this.showToast(error.message, 'error');
+                            return;
+                        }
+                        events[index] = { ...events[index], ...eventData };
+                    } else {
+                        eventData.id = Math.max(0, ...events.map(event => event.id || 0)) + 1;
+                        eventData.current_participants = 0;
+                        eventData.organizer = DataStorage.getCurrentUser()?.name || 'CBS Admin';
+                        events.push(eventData);
+                    }
+                    DataStorage.saveEvents(events);
+                    this.data.events = events;
+                    this.loadEvents();
+                    this.loadRecentEvents();
+                    this.loadStats();
+                    displayEvents();
+                    this.showToast(`Event ${isUpdate ? 'updated' : 'created'} in this browser.`, 'success');
+                    document.getElementById('eventModal').style.display = 'none';
                 }
             }
 
@@ -3328,7 +3352,51 @@
                     displayEvents();
                     showRegistrationQR(email, eventId);
                 } catch (error) {
-                    showToast(error.message, 'error');
+                    // GitHub Pages has no Flask API. Save registrations in this browser instead.
+                    const participants = DataStorage.getParticipants();
+                    let participant = participants.find(item => item.email.toLowerCase() === email.toLowerCase());
+                    if (!participant) {
+                        participant = {
+                            id: Math.max(0, ...participants.map(item => item.id || 0)) + 1,
+                            name,
+                            email,
+                            phone,
+                            organization,
+                            created_at: new Date().toISOString()
+                        };
+                        participants.push(participant);
+                    }
+
+                    const registrations = DataStorage.getRegistrations();
+                    if (registrations.some(item => item.event_id === eventId && item.participant_id === participant.id)) {
+                        showToast('This email is already registered for the event.', 'warning');
+                        return;
+                    }
+                    registrations.push({
+                        id: Math.max(0, ...registrations.map(item => item.id || 0)) + 1,
+                        event_id: eventId,
+                        participant_id: participant.id,
+                        registration_date: new Date().toISOString(),
+                        status: 'registered',
+                        qrData: generateParticipantQR(email, eventId)
+                    });
+                    event.current_participants = (event.current_participants || 0) + 1;
+                    DataStorage.saveParticipants(participants);
+                    DataStorage.saveRegistrations(registrations);
+                    DataStorage.saveEvents(events);
+                    if (dashboard?.data) {
+                        dashboard.data.events = events;
+                        dashboard.data.participants = participants;
+                        dashboard.data.registrations = registrations;
+                        dashboard.loadEvents();
+                        dashboard.loadRecentEvents();
+                        dashboard.loadStats();
+                    }
+                    registrationForm.reset();
+                    registrationModal.style.display = 'none';
+                    displayEvents();
+                    showToast(`Registered for ${event.title}; saved in this browser.`, 'success');
+                    showRegistrationQR(email, eventId);
                 }
             });
         }
