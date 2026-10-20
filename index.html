@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chetan Business School - Event Tracker</title>
+    <title>Festivo - Event Management System</title>
     
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -76,6 +76,47 @@
             font-size: 0.9rem;
             color: #bbdefb;
         }
+
+
+
+        /* Festivo branding */
+        .festivo-brand {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex-wrap: nowrap;
+            min-width: 0;
+        }
+
+        .festivo-logo {
+            display: block;
+            width: 210px;
+            height: 100px;
+            max-width: 100%;
+            object-fit: contain;
+            object-position: center;
+            background: #fff;
+            border-radius: 10px;
+            padding: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                gap: 0.75rem;
+            }
+            .festivo-logo {
+                width: 175px;
+                height: 82px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .festivo-logo {
+                width: 145px;
+                height: 70px;
+            }
+        }
+
 
         /* Button Styles */
         .btn-login, .btn-primary, .btn-secondary, .btn-sm {
@@ -1054,13 +1095,8 @@
         <!-- Header Section -->
         <header>
             <div class="header-content">
-                <div class="logo-container">
-                    <h1>CBS</h1>
-                    <div class="institute-info">
-                        <h2>DYAVAPPANAVAR-KORAVI-SIONAL EDUCATION TRUST'S</h2>
-                        <h3>CHETAN BUSINESS SCHOOL</h3>
-                        <p>Institute of Management, IT & Research Centre</p>
-                    </div>
+                <div class="logo-container festivo-brand">
+                    <img class="festivo-logo" src="festivo-logo.png" alt="Festivo — Event Management System">
                 </div>
                 <div class="auth-buttons">
                     <button id="loginBtn" class="btn-login">Organizer Login</button>
@@ -1218,13 +1254,8 @@
         <!-- Header -->
         <header>
             <div class="header-content">
-                <div class="logo-container">
-                    <h1>CBS</h1>
-                    <div class="institute-info">
-                        <h2>DYAVAPPANAVAR-KORAVI-SIONAL EDUCATION TRUST'S</h2>
-                        <h3>CHETAN BUSINESS SCHOOL</h3>
-                        <p>Event Management Dashboard</p>
-                    </div>
+                <div class="logo-container festivo-brand">
+                    <img class="festivo-logo" src="festivo-logo.png" alt="Festivo — Event Management System">
                 </div>
                 <div class="auth-buttons">
                     <span class="welcome-msg" id="welcomeMsg"></span>
