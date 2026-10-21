@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Festivo - Event Management System</title>
+    <title>Chetan Business School - Event Tracker</title>
     
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -76,47 +76,6 @@
             font-size: 0.9rem;
             color: #bbdefb;
         }
-
-
-
-        /* Festivo branding */
-        .festivo-brand {
-            display: flex;
-            align-items: center;
-            gap: 0;
-            flex-wrap: nowrap;
-            min-width: 0;
-        }
-
-        .festivo-logo {
-            display: block;
-            width: 210px;
-            height: 100px;
-            max-width: 100%;
-            object-fit: contain;
-            object-position: center;
-            background: #fff;
-            border-radius: 10px;
-            padding: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                gap: 0.75rem;
-            }
-            .festivo-logo {
-                width: 175px;
-                height: 82px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .festivo-logo {
-                width: 145px;
-                height: 70px;
-            }
-        }
-
 
         /* Button Styles */
         .btn-login, .btn-primary, .btn-secondary, .btn-sm {
@@ -1095,8 +1054,13 @@
         <!-- Header Section -->
         <header>
             <div class="header-content">
-                <div class="logo-container festivo-brand">
-                    <img class="festivo-logo" src="festivo-logo.png" alt="Festivo — Event Management System">
+                <div class="logo-container">
+                    <h1>CBS</h1>
+                    <div class="institute-info">
+                        <h2>DYAVAPPANAVAR-KORAVI-SIONAL EDUCATION TRUST'S</h2>
+                        <h3>CHETAN BUSINESS SCHOOL</h3>
+                        <p>Institute of Management, IT & Research Centre</p>
+                    </div>
                 </div>
                 <div class="auth-buttons">
                     <button id="loginBtn" class="btn-login">Organizer Login</button>
@@ -1254,8 +1218,13 @@
         <!-- Header -->
         <header>
             <div class="header-content">
-                <div class="logo-container festivo-brand">
-                    <img class="festivo-logo" src="festivo-logo.png" alt="Festivo — Event Management System">
+                <div class="logo-container">
+                    <h1>CBS</h1>
+                    <div class="institute-info">
+                        <h2>DYAVAPPANAVAR-KORAVI-SIONAL EDUCATION TRUST'S</h2>
+                        <h3>CHETAN BUSINESS SCHOOL</h3>
+                        <p>Event Management Dashboard</p>
+                    </div>
                 </div>
                 <div class="auth-buttons">
                     <span class="welcome-msg" id="welcomeMsg"></span>
@@ -1585,11 +1554,23 @@
         </div>
     </div>
 
+    <!-- Flask data stays outside executable JavaScript so editor diagnostics remain valid. -->
+    <script id="serverData" type="application/json">{{ initial_data|tojson }}</script>
+
     <!-- JavaScript Code -->
     <script>
-        // GitHub Pages serves this file as static HTML, so it cannot render Flask templates.
-        // Keep server data optional and use the browser's localStorage demo data by default.
-        const SERVER_DATA = {};
+        const SERVER_DATA = (() => {
+            const dataElement = document.getElementById('serverData');
+            const dataText = dataElement?.textContent.trim();
+            if (!dataText || dataText.startsWith('{{')) return {};
+
+            try {
+                return JSON.parse(dataText);
+            } catch (error) {
+                console.warn('Could not parse server-provided data; using local demo data.', error);
+                return {};
+            }
+        })();
 
         // ====================
         // DATA STORAGE CLASS
@@ -1963,6 +1944,8 @@
             constructor() {
                 this.currentUser = null;
                 this.data = {};
+                this.eventChart = null;
+                this.attendanceChart = null;
                 this.initialize();
             }
 
@@ -2026,6 +2009,11 @@
 
                 // Attendance
                 document.getElementById('eventSelectAttendance')?.addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        sessionStorage.setItem('currentAttendanceEvent', e.target.value);
+                    } else {
+                        sessionStorage.removeItem('currentAttendanceEvent');
+                    }
                     this.loadAttendanceForEvent(e.target.value);
                 });
 
@@ -2091,6 +2079,8 @@
                 this.loadEvents();
                 this.loadParticipants();
                 this.loadRecentEvents();
+                this.populateEventSelect();
+                this.showEmptyAttendance();
             }
 
             updateWelcomeMessage() {
@@ -2115,6 +2105,10 @@
                 const sectionElement = document.getElementById(sectionId);
                 if (sectionElement) {
                     sectionElement.classList.add('active');
+                }
+
+                if (sectionId === 'reports') {
+                    this.generateReport();
                 }
             }
 
@@ -2312,29 +2306,7 @@
                     this.showToast(`Event ${isUpdate ? 'updated' : 'created'} successfully!`, 'success');
                     document.getElementById('eventModal').style.display = 'none';
                 } catch (error) {
-                    // GitHub Pages has no Flask API. Keep event management usable locally.
-                    const events = DataStorage.getEvents();
-                    if (isUpdate) {
-                        const index = events.findIndex(event => event.id === eventData.id);
-                        if (index === -1) {
-                            this.showToast(error.message, 'error');
-                            return;
-                        }
-                        events[index] = { ...events[index], ...eventData };
-                    } else {
-                        eventData.id = Math.max(0, ...events.map(event => event.id || 0)) + 1;
-                        eventData.current_participants = 0;
-                        eventData.organizer = DataStorage.getCurrentUser()?.name || 'CBS Admin';
-                        events.push(eventData);
-                    }
-                    DataStorage.saveEvents(events);
-                    this.data.events = events;
-                    this.loadEvents();
-                    this.loadRecentEvents();
-                    this.loadStats();
-                    displayEvents();
-                    this.showToast(`Event ${isUpdate ? 'updated' : 'created'} in this browser.`, 'success');
-                    document.getElementById('eventModal').style.display = 'none';
+                    this.showToast(error.message, 'error');
                 }
             }
 
@@ -2435,7 +2407,6 @@
                 const registrations = this.data.registrations.filter(r => r.event_id === parseInt(eventId));
                 const container = document.getElementById('attendanceContainer');
                 
-                this.populateEventSelect();
                 this.updateAttendanceSummary(eventId);
                 this.showAttendanceTimeline(eventId);
                 
@@ -2985,10 +2956,13 @@
             }
 
             generateReport() {
-                if (typeof Chart !== 'undefined') {
-                    this.createEventChart();
-                    this.createAttendanceChart();
+                if (typeof Chart === 'undefined') {
+                    this.showToast('Charts could not be loaded. Check your connection and reload the page.', 'warning');
+                    return;
                 }
+
+                this.createEventChart();
+                this.createAttendanceChart();
             }
 
             createEventChart() {
@@ -3000,7 +2974,8 @@
                 const upcoming = events.filter(e => new Date(e.date) >= new Date()).length;
                 const full = events.filter(e => e.current_participants >= e.max_participants).length;
 
-                new Chart(ctx, {
+                this.eventChart?.destroy();
+                this.eventChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: ['Completed', 'Upcoming', 'Full'],
@@ -3029,7 +3004,8 @@
                 const absent = attendance.filter(a => a.status === 'absent').length;
                 const late = attendance.filter(a => a.status === 'late').length;
 
-                new Chart(ctx, {
+                this.attendanceChart?.destroy();
+                this.attendanceChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: ['Present', 'Absent', 'Late'],
@@ -3216,6 +3192,9 @@
             if (!localStorage.getItem('cbs_attendance')) {
                 DataStorage.saveAttendance(DataStorage.getAttendance());
             }
+
+            // Keep dashboard controls ready even before the first attendance event is chosen.
+            dashboard.populateEventSelect();
             
             displayEvents();
             
@@ -3383,51 +3362,7 @@
                     displayEvents();
                     showRegistrationQR(email, eventId);
                 } catch (error) {
-                    // GitHub Pages has no Flask API. Save registrations in this browser instead.
-                    const participants = DataStorage.getParticipants();
-                    let participant = participants.find(item => item.email.toLowerCase() === email.toLowerCase());
-                    if (!participant) {
-                        participant = {
-                            id: Math.max(0, ...participants.map(item => item.id || 0)) + 1,
-                            name,
-                            email,
-                            phone,
-                            organization,
-                            created_at: new Date().toISOString()
-                        };
-                        participants.push(participant);
-                    }
-
-                    const registrations = DataStorage.getRegistrations();
-                    if (registrations.some(item => item.event_id === eventId && item.participant_id === participant.id)) {
-                        showToast('This email is already registered for the event.', 'warning');
-                        return;
-                    }
-                    registrations.push({
-                        id: Math.max(0, ...registrations.map(item => item.id || 0)) + 1,
-                        event_id: eventId,
-                        participant_id: participant.id,
-                        registration_date: new Date().toISOString(),
-                        status: 'registered',
-                        qrData: generateParticipantQR(email, eventId)
-                    });
-                    event.current_participants = (event.current_participants || 0) + 1;
-                    DataStorage.saveParticipants(participants);
-                    DataStorage.saveRegistrations(registrations);
-                    DataStorage.saveEvents(events);
-                    if (dashboard?.data) {
-                        dashboard.data.events = events;
-                        dashboard.data.participants = participants;
-                        dashboard.data.registrations = registrations;
-                        dashboard.loadEvents();
-                        dashboard.loadRecentEvents();
-                        dashboard.loadStats();
-                    }
-                    registrationForm.reset();
-                    registrationModal.style.display = 'none';
-                    displayEvents();
-                    showToast(`Registered for ${event.title}; saved in this browser.`, 'success');
-                    showRegistrationQR(email, eventId);
+                    showToast(error.message, 'error');
                 }
             });
         }
